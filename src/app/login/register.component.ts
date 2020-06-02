@@ -55,8 +55,8 @@ export class RegisterComponent implements OnInit {
         this.forma.setValue ({
             nombre: 'Amadeo',
             correo: 'am@deo.es',
-            password: ' 1234',
-            password2: ' 1234',
+            password: ' 123456',
+            password2: ' 123456',
             condiciones: true,
 
         });

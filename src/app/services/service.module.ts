@@ -5,6 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { UsuarioService } from './usuario/usuario.service';
 import { LoginGuardGuard } from './guards/login-guard.guard';
 import { SubirArchivoService } from './subir-archivo/subir-archivo.service';
+import { ModalUploadService } from '../components/modal-upload/modal-upload.service';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { SubirArchivoService } from './subir-archivo/subir-archivo.service';
       // Aunque no los incluya aqui me funciona todo bien...lo pongo porque lo ponen en el curso
       UsuarioService,
       LoginGuardGuard,
-      SubirArchivoService
+      SubirArchivoService,
+      ModalUploadService
   ]
 })
 

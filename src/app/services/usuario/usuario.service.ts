@@ -180,4 +180,67 @@ export class UsuarioService {
             });
 
     }
+
+    public cargarUsuarios(desde: number = 0){
+        const url = URL_SERVICIOS + '/usuario?desde=' + desde;
+
+        return this.http.get(url)
+            .pipe(map( (resp:any)=>{
+                return resp;
+            }));
+    }
+
+    public buscarUsuario(textoBusqueda: string){
+        const url = URL_SERVICIOS + '/busqueda/coleccion/usuarios/' + textoBusqueda;
+
+        if(textoBusqueda===''){
+            return this.cargarUsuarios();
+        }
+
+        return this.http.get(url)
+            .pipe(map( (resp:any)=>{
+                return resp;
+            }));
+    }
+
+    public borrarUsuario(usuario: Usuario){
+        const url = URL_SERVICIOS + '/usuario/' + usuario._id;
+
+        return this.http.delete(url,{headers: {token:this.token}})
+            .pipe(map( (resp:any)=>{
+                Swal.fire({
+                    title: 'Usuario eliminado con exito!',
+                    text: usuario.email,
+                    icon: 'success'
+                });
+
+                return resp;
+            }));
+
+    }
+
+    public guardarUsuario(usuario: Usuario){
+        const url = URL_SERVICIOS + '/usuario/' + usuario._id;
+
+        return this.http.put(url,usuario,{headers: {token:this.token}})
+            .pipe(map( (resp:any)=>{
+
+                if(usuario._id===this.usuario._id){
+                    // si el usuario modificado es el logueado, actualizo info de sesion del mismo
+                    let usuarioBD: Usuario = resp.usuario;
+                    this.guardarStorage(usuarioBD._id,this.token, usuarioBD);
+
+                }
+
+                
+                Swal.fire({
+                    title: 'Usuario actualizado con exito!',
+                    text: usuario.email,
+                    icon: 'success'
+                });
+
+                return resp;
+            }));
+
+    }
 }
