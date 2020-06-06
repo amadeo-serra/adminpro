@@ -8,6 +8,8 @@ export class ImagenPipe implements PipeTransform {
 
   transform(img: string, tipo: string = 'usuario'): any {
 
+    // console.log(img);
+
     let url = URL_SERVICIOS + '/imagenes';
 
     if( !img ){
