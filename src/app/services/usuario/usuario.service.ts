@@ -3,10 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { Usuario } from '../../models/usuario.model';
 import { URL_SERVICIOS } from '../../config/config';
 // import 'rxjs/add/operator/map';
-import {map} from 'rxjs/operators';
+import { map } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { SubirArchivoService } from '../subir-archivo/subir-archivo.service';
+import { Observable, throwError } from 'rxjs';
 
 
 @Injectable({
@@ -16,6 +18,7 @@ export class UsuarioService {
 
     usuario: Usuario;
     token: string = '';
+    menu: any[] = [];
 
     constructor(public http: HttpClient, 
                 public router: Router,
@@ -45,13 +48,15 @@ export class UsuarioService {
 
     }
 
-    private guardarStorage(id: string, token: string, usuario:Usuario){
+    private guardarStorage(id: string, token: string, usuario:Usuario, menu: any){
         localStorage.setItem( 'id', id );
         localStorage.setItem( 'token', token );
         localStorage.setItem( 'usuario', JSON.stringify(usuario) );
+        localStorage.setItem( 'menu', JSON.stringify(menu) );
 
         this.usuario=usuario;
         this.token=token;
+        this.menu = menu;
     }
 
 
@@ -59,9 +64,11 @@ export class UsuarioService {
         if(localStorage.getItem('token')){
             this.token = localStorage.getItem('token') || '';
             this.usuario = JSON.parse(localStorage.getItem('usuario'));
+            this.menu = JSON.parse(localStorage.getItem('menu'));
         }else{
             this.token='';
             this.usuario=null;
+            this.menu=null;
 
         }
     }
@@ -70,9 +77,11 @@ export class UsuarioService {
     public logout(){
         this.usuario=null;
         this.token = '';
+        this.menu = null;
 
         localStorage.removeItem('usuario');
         localStorage.removeItem('token');
+        localStorage.removeItem('menu');
 
         this.router.navigate(['/login']);
     }
@@ -83,11 +92,14 @@ export class UsuarioService {
         return this.http.post(url, {token: tokenGoogle})
             .pipe(map( (resp: any) => {
                 
-                this.guardarStorage(resp.id, resp.token, resp.usuario);
+                this.guardarStorage(resp.id, resp.token, resp.usuario, resp.menu);
                 
+                // console.log(resp);
+
                 return true;
 
-            }));
+            }))
+            ;
     }
 
     public login( usuario: Usuario, recuerdame: boolean = false){
@@ -101,13 +113,22 @@ export class UsuarioService {
         let url = URL_SERVICIOS + '/login';
 
         return this.http.post(url,usuario)
-            .pipe(map( (resp: any) => {
-                
-                this.guardarStorage(resp.id, resp.token, resp.usuario);
-                
+            .pipe(
+                map( (resp: any) => {
+                this.guardarStorage(resp.id, resp.token, resp.usuario, resp.menu);
                 return true;
-
-            }));
+                })
+                ,
+                catchError( (err,)=>{
+                    Swal.fire({
+                        title: 'Error',
+                        text: err.error.mensaje,
+                        icon: 'error'
+                      });
+    
+                    return throwError(err);
+                })
+            );
 
     }
 
@@ -116,7 +137,8 @@ export class UsuarioService {
         let url = URL_SERVICIOS + '/usuario';
 
         return this.http.post(url,usuario)
-            .pipe(map( (resp:any)=>{
+            .pipe(
+                map( (resp:any)=>{
                 
     
                 Swal.fire({
@@ -126,7 +148,18 @@ export class UsuarioService {
                   });
     
                 return resp.usuario;
-            }));
+                })
+                ,
+                catchError( (err,)=>{
+                    Swal.fire({
+                        title: err.error.mensaje,
+                        text: err.error.errors.message,
+                        icon: 'error'
+                      });
+    
+                    return throwError(err);
+                })
+        );
 
             // .subscribe( (resp)=>{
             //     console.log('resp',resp);
@@ -136,20 +169,32 @@ export class UsuarioService {
     public actualizarUsuario(usuario:Usuario){
         let url = URL_SERVICIOS + '/usuario/' + usuario._id;
 
-        return this.http.put(url,usuario,{headers: {token:this.token}})
-            .pipe(map( (resp:any)=>{
-                
+        return this.http.put(url, usuario, { headers: { token: this.token } })
+            .pipe(
+                map((resp: any) => {
     
-                Swal.fire({
-                    title: 'Usuario actualizado con exito',
-                    text: usuario.email,
-                    icon: 'success'
-                });
+    
+                    Swal.fire({
+                        title: 'Usuario actualizado con exito',
+                        text: usuario.email,
+                        icon: 'success'
+                    });
+    
+                    this.guardarStorage(resp.usuario.id, this.token, resp.usuario, this.menu);
+    
+                    return resp.usuario;
+                })
+                ,
+                catchError((err, ) => {
+                    Swal.fire({
+                        title: err.error.mensaje,
+                        text: err.error.errors.message,
+                        icon: 'error'
+                    });
 
-                this.guardarStorage(resp.usuario.id, this.token, resp.usuario);
-    
-                return resp.usuario;
-            }));
+                    return throwError(err);
+                })
+            );
 
             // .subscribe( (resp)=>{
             //     console.log('resp',resp);
@@ -170,7 +215,7 @@ export class UsuarioService {
                     icon: 'success'
                 });
 
-                this.guardarStorage(this.usuario._id, this.token, this.usuario);
+                this.guardarStorage(this.usuario._id, this.token, this.usuario, this.menu);
 
                 // console.log('OK!',resp.usuarios.img);
                 
@@ -228,7 +273,7 @@ export class UsuarioService {
                 if(usuario._id===this.usuario._id){
                     // si el usuario modificado es el logueado, actualizo info de sesion del mismo
                     let usuarioBD: Usuario = resp.usuario;
-                    this.guardarStorage(usuarioBD._id,this.token, usuarioBD);
+                    this.guardarStorage(usuarioBD._id,this.token, usuarioBD, this.menu);
 
                 }
 

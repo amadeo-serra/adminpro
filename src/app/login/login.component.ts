@@ -84,7 +84,7 @@ export class LoginComponent implements OnInit {
             return;
         }
 
-        console.log( forma.value );
+        //console.log( forma.value );
         
         const usuario = new Usuario(null,forma.value.email,forma.value.password);
 

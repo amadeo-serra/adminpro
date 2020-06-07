@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SettingsService,SidebarService,SharedService, MedicoService } from './service.index';
+import { SettingsService,SidebarService,SharedService, MedicoService, AdminGuard } from './service.index';
 import { HttpClientModule } from '@angular/common/http';
 import { UsuarioService } from './usuario/usuario.service';
 import { LoginGuardGuard } from './guards/login-guard.guard';
@@ -22,6 +22,7 @@ import { HospitalService } from './hospital/hospital.service';
       // Aunque no los incluya aqui me funciona todo bien...lo pongo porque lo ponen en el curso
       UsuarioService,
       LoginGuardGuard,
+      AdminGuard,
       SubirArchivoService,
       ModalUploadService,
       HospitalService,

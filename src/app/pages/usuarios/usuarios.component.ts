@@ -3,6 +3,7 @@ import { Usuario } from '../../models/usuario.model';
 import { UsuarioService } from '../../services/usuario/usuario.service';
 import Swal from 'sweetalert2';
 import { ModalUploadService } from '../../components/modal-upload/modal-upload.service';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -17,12 +18,25 @@ export class UsuariosComponent implements OnInit {
     desde: number = 0;
     totalRegistros: number = 0;
     cargando: boolean = true;
+    textoBusqueda: string = '';
 
     constructor( public _usuariosService: UsuarioService,
-                 public _modalUploadService: ModalUploadService) { }
+                 public _modalUploadService: ModalUploadService,
+                 public activatedRoute: ActivatedRoute
+                 ) {
+
+    }
 
     ngOnInit(): void {
+
+        this.textoBusqueda = this.activatedRoute.snapshot.params.textoBusqueda;
+
+        if(!this.textoBusqueda){
+            this.textoBusqueda='';
+        }
+
         this.cargarUsuarios();
+
 
         this._modalUploadService.notificacion
             .subscribe(resp=>{
@@ -37,6 +51,16 @@ export class UsuariosComponent implements OnInit {
     }
 
     public cargarUsuarios(){
+        if(this.textoBusqueda===''){
+            // console.log('TODOS');
+            this.cargarTodosLosUsuarios();
+        }else{
+            // console.log('BUSCO:' + this.textoBusqueda);
+            this.buscarUsuario(this.textoBusqueda);
+        }
+    }
+
+    public cargarTodosLosUsuarios(){
 
         this.cargando = true;
 
@@ -75,6 +99,10 @@ export class UsuariosComponent implements OnInit {
 
         this.cargando = true;
 
+        if(textoBusqueda===''){
+            textoBusqueda = this.textoBusqueda;
+        }
+
         this._usuariosService.buscarUsuario(textoBusqueda)
             .subscribe( (resp:any)=>{
     
@@ -95,7 +123,7 @@ export class UsuariosComponent implements OnInit {
                 icon: 'warning'
             });
 
-            return
+            return;
         }
 
         Swal.fire({
