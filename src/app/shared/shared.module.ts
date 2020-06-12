@@ -1,5 +1,9 @@
 import { NgModule } from "@angular/core";
-import { BrowserModule } from '@angular/platform-browser';
+
+// LAZY-LOAD ??
+// import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
+// LAZY-LOAD
 
 
 // pipes
@@ -12,11 +16,18 @@ import { HeaderComponent } from './header/header.component';
 import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
 import { NopagefoundComponent } from './nopagefound/nopagefound.component';
 import { RouterModule } from '@angular/router';
+import { ModalUploadComponent } from '../components/modal-upload/modal-upload.component';
 
 @NgModule({
     imports:[
         RouterModule,
-        BrowserModule,
+
+        // LAZY-LOAD ??
+        // BrowserModule,
+        CommonModule,
+        // LAZY-LOAD
+
+
         PipesModule
     ],
 
@@ -25,13 +36,19 @@ import { RouterModule } from '@angular/router';
         HeaderComponent,
         BreadcrumbsComponent,
         NopagefoundComponent,
+
+        // añado por LAZY-LOAD
+        ModalUploadComponent
     ],
 
     exports: [
         SidebarComponent,
         HeaderComponent,
         BreadcrumbsComponent,
-        NopagefoundComponent
+        NopagefoundComponent,
+
+        // añado por LAZY-LOAD
+        ModalUploadComponent
     ]
 })
 

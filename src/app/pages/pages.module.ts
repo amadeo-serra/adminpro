@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
-import { BrowserModule } from '@angular/platform-browser';
+
+import { CommonModule } from '@angular/common';
 
 import { FormsModule } from '@angular/forms';
 
@@ -13,7 +14,6 @@ import { ChartsModule } from 'ng2-charts';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProgressComponent } from './progress/progress.component';
 import { Graficas1Component } from './graficas1/graficas1.component';
-import { PagesComponent } from './pages.component';
 
 // pipes
 import { PipesModule } from '../pipes/pipes.module';
@@ -26,7 +26,6 @@ import { PromesasComponent } from './promesas/promesas.component';
 import { RxjsComponent } from './rxjs/rxjs.component';
 import { ProfileComponent } from './profile/profile.component';
 import { UsuariosComponent } from './usuarios/usuarios.component';
-import { ModalUploadComponent } from '../components/modal-upload/modal-upload.component';
 import { HospitalesComponent } from './hospitales/hospitales.component';
 import { MedicosComponent } from './medicos/medicos.component';
 import { MedicoComponent } from './medicos/medico.component';
@@ -35,10 +34,13 @@ import { BusquedaComponent } from './busqueda/busqueda.component';
 
 @NgModule({
     declarations: [
+        // comento por LAZY-LOAD
+        // PagesComponent,
+        // ModalUploadComponent,
+
         DashboardComponent,
         ProgressComponent,
         Graficas1Component,
-        PagesComponent,
         IncrementadorComponent,
         GraficaDonutComponent,
         AccountSettingsComponent,
@@ -46,7 +48,6 @@ import { BusquedaComponent } from './busqueda/busqueda.component';
         RxjsComponent,
         ProfileComponent,
         UsuariosComponent,
-        ModalUploadComponent,
         HospitalesComponent,
         MedicosComponent,
         MedicoComponent,
@@ -54,10 +55,11 @@ import { BusquedaComponent } from './busqueda/busqueda.component';
     ],
 
     exports: [
+        // comento por LAZY-LOAD, si lo comento en declarations debo comentarlo aqui si no da error
+        //PagesComponent,
         DashboardComponent,
         ProgressComponent,
         Graficas1Component,
-        PagesComponent,
         IncrementadorComponent,
         GraficaDonutComponent
     ],
@@ -68,7 +70,10 @@ import { BusquedaComponent } from './busqueda/busqueda.component';
         FormsModule,
         ChartsModule,
         PipesModule,
-        BrowserModule
+
+        // LAZY-LOAD??
+        //BrowserModule,
+        CommonModule
       ],
 })
 

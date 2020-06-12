@@ -7,6 +7,7 @@ import { LoginGuardGuard } from './guards/login-guard.guard';
 import { SubirArchivoService } from './subir-archivo/subir-archivo.service';
 import { ModalUploadService } from '../components/modal-upload/modal-upload.service';
 import { HospitalService } from './hospital/hospital.service';
+import { VerificaTokenGuard } from './guards/verifica-token.guard';
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import { HospitalService } from './hospital/hospital.service';
       SubirArchivoService,
       ModalUploadService,
       HospitalService,
-      MedicoService
+      MedicoService,
+      VerificaTokenGuard
   ]
 })
 

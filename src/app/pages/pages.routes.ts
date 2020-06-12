@@ -16,15 +16,22 @@ import { MedicoComponent } from './medicos/medico.component';
 import { MedicosComponent } from './medicos/medicos.component';
 import { BusquedaComponent } from './busqueda/busqueda.component';
 import { AdminGuard } from '../services/guards/admin.guard';
+import { VerificaTokenGuard } from '../services/guards/verifica-token.guard';
 
 
 const pagesRoutes: Routes = [
-    {
-        path: '' ,
-        component: PagesComponent ,
-        canActivate: [LoginGuardGuard],
-        children: [
-            { path: 'dashboard' , component: DashboardComponent, data: { titulo: 'Dashboard' } },
+    // Para el LAZY-LOAD comento esto para hacerlo de otra manera
+    // {
+    //     path: '' ,
+    //     component: PagesComponent ,
+    //     canActivate: [LoginGuardGuard],
+    //     children: [
+            {
+                path: 'dashboard' , 
+                component: DashboardComponent, 
+                canActivate: [VerificaTokenGuard],
+                data: { titulo: 'Dashboard.' } 
+            },
             { path: 'progress' , component: ProgressComponent , data: { titulo: 'Progress' } },
             { path: 'graficas1' , component: Graficas1Component , data: { titulo: 'Graficas' } },
             { path: 'account-settings' , component: AccountSettingsComponent , data: { titulo: 'Ajustes' } },
@@ -53,9 +60,9 @@ const pagesRoutes: Routes = [
             { path: 'busqueda/:textoBusqueda' , component: BusquedaComponent , data: { titulo: 'Buscador' } },
 
             { path: '', pathMatch:'full' ,  redirectTo: 'dashboard'},
-        ]
+    //     ]
         
-    },
+    // },
 
 ];
 
